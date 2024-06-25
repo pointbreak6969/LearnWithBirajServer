@@ -21,6 +21,8 @@ const studentSchema = new Schema({
       type: Boolean,
     },
   },
+}, {
+  timestamps: true
 });
 
 const Student = mongoose.model("student", studentSchema);

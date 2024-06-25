@@ -9,7 +9,10 @@ const querySchema = new Schema({
         type: String,
         required: true,
     },
-});
+}, 
+ {
+    timestamps: true
+ });
 
 const Query = mongoose.model("query", querySchema);
 export {Query};
