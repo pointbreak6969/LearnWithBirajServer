@@ -29,4 +29,5 @@ const registerStudent = asyncHandler(async (req, res)=>{
     }
 })
 
+
 export {registerStudent};
