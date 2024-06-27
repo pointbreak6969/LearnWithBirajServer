@@ -33,3 +33,19 @@ const getAllStudents = asyncHandler(async (req, res) => {
     throw new ApiError(500, "Internal Server Error");
   }
 });
+const deleteStudent = asyncHandler(async (req, res) => {
+  try {
+    const student = await Student.findById(req.params.id);
+    if (!student) {
+      throw new ApiError(404, "Student not found");
+    }
+    await student.remove();
+    return res
+      .status(200)
+      .json(new ApiResponse(200, {}, "Student deleted successfully"));
+  } catch (error) {
+    console.log("Error deleting student", error);
+    throw new ApiError(500, "Internal Server Error");
+  }
+});
+export { adminLogin, getAllStudents, deleteStudent };
