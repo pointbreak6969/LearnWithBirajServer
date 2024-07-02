@@ -55,6 +55,29 @@ const adminLogout = asyncHandler(async (req, res) => {
     throw new ApiError(500, "Internal Server Error");
   }
 });
+const adminForgotPassword = asyncHandler(async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      throw new ApiError(400, "Email is required");
+    }
+    const admin = await Admin.findOne({ email });
+    const resetToken = admin.getResetPasswordToken();
+    await admin.save();
+    // Send email with resetToken
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(200, { resetToken }, "Reset password email sent")
+      );
+    if (!admin) {
+      throw new ApiError(404, "Admin not found");
+    }
+  } catch (error) {
+    console.log("Error forgot password", error);
+    throw new ApiError(500, "Internal Server Error");
+  }
+});
 const getAllStudents = asyncHandler(async (req, res) => {
   try {
     const students = await Student.find();
