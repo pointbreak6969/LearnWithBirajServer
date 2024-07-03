@@ -6,3 +6,5 @@ function getResetPasswordToken() {
     
     return token;
 }
+
+export { getResetPasswordToken}

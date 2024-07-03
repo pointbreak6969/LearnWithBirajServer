@@ -3,7 +3,8 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { Student } from "../models/student.model.js";
 import { Admin } from "../models/admin.model.js";
-
+import { sendEmail } from "../utils/sendEmail.js";
+import { getResetPasswordToken } from "../utils/ResetPassword.js";
 const adminRegister = asyncHandler(async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -62,17 +63,18 @@ const adminForgotPassword = asyncHandler(async (req, res) => {
       throw new ApiError(400, "Email is required");
     }
     const admin = await Admin.findOne({ email });
-    const resetToken = admin.getResetPasswordToken();
+    const resetToken = getResetPasswordToken();
     await admin.save();
+    const sendEmailResponse = await sendEmail({
+      userEmail: email,
+      resetToken,
+    });
     // Send email with resetToken
     return res
       .status(200)
       .json(
-        new ApiResponse(200, { resetToken }, "Reset password email sent")
+        new ApiResponse(200, sendEmailResponse, "Reset password email sent")
       );
-    if (!admin) {
-      throw new ApiError(404, "Admin not found");
-    }
   } catch (error) {
     console.log("Error forgot password", error);
     throw new ApiError(500, "Internal Server Error");
