@@ -64,7 +64,7 @@ const adminForgotPassword = asyncHandler(async (req, res) => {
     }
     const admin = await Admin.findOne({ email });
     const resetToken = getResetPasswordToken();
-    await admin.save();
+    await admin.save({validateBeforeSave: false});
     const sendEmailResponse = await sendEmail({
       userEmail: email,
       resetToken,
@@ -108,4 +108,4 @@ const deleteStudent = asyncHandler(async (req, res) => {
     throw new ApiError(500, "Internal Server Error");
   }
 });
-export { adminLogin, getAllStudents, deleteStudent };
+export { adminLogin, getAllStudents, deleteStudent, adminRegister, adminLogout, adminForgotPassword};
